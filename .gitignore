@@ -1,0 +1,48 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+out-tsc/
+tmp/
+temp/
+
+# Angular
+.angular/cache/
+.angular/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDEs y editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Entornos
+.env
+.env.*
+!.env.example
+
+# Tests / coverage
+coverage/
+
+# Cache
+.cache/
+.eslintcache
+
+# Archivos generados
+*.log
