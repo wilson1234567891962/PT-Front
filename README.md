@@ -1,27 +1,50 @@
-# Task
+# PT-Front - Frontend Angular 17
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Este proyecto corresponde al frontend de una aplicación de gestión de tareas.  
+La aplicación será desarrollada con Angular 17 y se conectará a un backend Java que expone una API REST para administrar tareas almacenadas en una base de datos Oracle.
 
-## Development server
+## Objetivo del proyecto
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Construir una interfaz web que permita consumir los servicios del backend y realizar operaciones CRUD sobre tareas.
 
-## Code scaffolding
+La aplicación permitirá:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Listar tareas.
+- Crear nuevas tareas.
+- Editar tareas existentes.
+- Marcar tareas como completadas o pendientes.
+- Eliminar tareas.
+- Manejar errores en las peticiones HTTP.
+- Validar campos obligatorios en formularios.
+- Desplegar el frontend en GitHub Pages.
 
-## Build
+## Tecnologías utilizadas
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Angular 17
+- TypeScript
+- HTML5
+- SCSS
+- RxJS
+- Angular HttpClient
+- GitHub Actions
+- GitHub Pages
 
-## Running unit tests
+## Backend esperado
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Este frontend está pensado para conectarse a un backend desarrollado con:
 
-## Running end-to-end tests
+- Java 8
+- Servlets o JAX-RS
+- JDBC
+- Oracle Database
+- PL/SQL
+- Apache Tomcat
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+El backend debe exponer los siguientes endpoints REST:
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```http
+GET     /api/tasks
+GET     /api/tasks/{id}
+POST    /api/tasks
+PUT     /api/tasks/{id}
+DELETE  /api/tasks/{id}
