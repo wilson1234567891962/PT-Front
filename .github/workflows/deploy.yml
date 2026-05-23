@@ -39,7 +39,7 @@ jobs:
       - name: Subir artifact para GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/task
+          path: dist/task/browser
 
   deploy:
     environment:
