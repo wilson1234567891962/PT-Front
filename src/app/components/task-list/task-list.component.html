@@ -1,1 +1,154 @@
-<p>task-list works!</p>
+<main class="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 lg:px-8">
+  <section class="mx-auto max-w-7xl">
+    <header
+      class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-blue-600 via-indigo-700 to-slate-950 p-8 shadow-2xl shadow-blue-950/40"
+    >
+      <div class="relative z-10 grid gap-8 lg:grid-cols-[1fr_240px] lg:items-center">
+        <div>
+          <span
+            class="inline-flex rounded-full bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-blue-100"
+          >
+            Angular 17 + Java REST
+          </span>
+
+          <h1 class="mt-6 text-4xl font-black tracking-tight md:text-6xl">Gestor de tareas</h1>
+
+          <p class="mt-4 max-w-2xl text-base leading-7 text-blue-100 md:text-lg">
+            Administra tareas conectadas a un backend Java con Oracle PL/SQL.
+          </p>
+        </div>
+
+        <div class="rounded-3xl border border-white/20 bg-white/15 p-6 backdrop-blur">
+          <p class="text-sm font-bold text-blue-100">Tareas registradas</p>
+          <strong class="mt-3 block text-5xl font-black">{{ tasks.length }}</strong>
+        </div>
+      </div>
+
+      <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="absolute -bottom-24 left-20 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
+    </header>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-[420px_1fr]">
+      <app-task-form
+        [taskToEdit]="selectedTask"
+        (formSaved)="onFormSaved()"
+        (editCancelled)="onEditCancelled()"
+      />
+
+      <section class="rounded-[2rem] border border-white/10 bg-white p-6 text-slate-950 shadow-2xl">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-2xl font-black tracking-tight">Listado de tareas</h2>
+            <p class="mt-1 text-sm text-slate-500">Consulta, completa, edita o elimina tareas.</p>
+          </div>
+
+          <button
+            type="button"
+            class="rounded-xl border border-blue-600 px-4 py-2 text-sm font-black text-blue-600 transition hover:bg-blue-50"
+            (click)="loadTasks()"
+          >
+            Refrescar
+          </button>
+        </div>
+
+        @if (isLoading) {
+          <div class="rounded-2xl bg-blue-50 p-4 text-sm font-bold text-blue-700">
+            Cargando tareas...
+          </div>
+        }
+
+        @if (errorMessage) {
+          <div class="mb-5 rounded-2xl border border-red-100 bg-red-50 p-4 text-red-700">
+            <p class="font-black">No se pudo conectar con el backend</p>
+            <p class="mt-1 text-sm">{{ errorMessage }}</p>
+          </div>
+        }
+
+        @if (!isLoading && tasks.length === 0) {
+          <div
+            class="grid place-items-center rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center"
+          >
+            <div
+              class="grid h-16 w-16 place-items-center rounded-full bg-blue-100 text-3xl font-black text-blue-600"
+            >
+              ✓
+            </div>
+
+            <h3 class="mt-5 text-xl font-black">No hay tareas registradas</h3>
+            <p class="mt-2 text-sm text-slate-500">Crea una nueva tarea desde el formulario.</p>
+          </div>
+        }
+
+        @if (!isLoading && tasks.length > 0) {
+          <div class="space-y-4">
+            @for (task of tasks; track trackByTaskId($index, task)) {
+              <article
+                class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-xl"
+                [class.bg-slate-50]="task.completed === 1"
+              >
+                <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                  <div class="flex gap-4">
+                    <label class="mt-1 inline-flex cursor-pointer items-center">
+                      <input
+                        type="checkbox"
+                        class="h-5 w-5 rounded border-slate-300 accent-blue-600"
+                        [checked]="task.completed === 1"
+                        (change)="onToggleCompleted(task, $any($event.target).checked)"
+                      />
+                    </label>
+
+                    <div>
+                      <div class="flex flex-wrap items-center gap-3">
+                        <h3
+                          class="text-lg font-black"
+                          [class.line-through]="task.completed === 1"
+                          [class.text-slate-400]="task.completed === 1"
+                        >
+                          {{ task.title }}
+                        </h3>
+
+                        <span
+                          class="rounded-full px-3 py-1 text-xs font-black"
+                          [class.bg-green-100]="task.completed === 1"
+                          [class.text-green-700]="task.completed === 1"
+                          [class.bg-amber-100]="task.completed !== 1"
+                          [class.text-amber-700]="task.completed !== 1"
+                        >
+                          {{ task.completed === 1 ? 'Completada' : 'Pendiente' }}
+                        </span>
+                      </div>
+
+                      @if (task.description) {
+                        <p class="mt-2 leading-7 text-slate-600">{{ task.description }}</p>
+                      } @else {
+                        <p class="mt-2 italic text-slate-400">Sin descripción</p>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button
+                      type="button"
+                      class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
+                      (click)="onEditTask(task)"
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      type="button"
+                      class="rounded-xl bg-red-50 px-4 py-2 text-sm font-black text-red-700 transition hover:bg-red-100"
+                      (click)="onDeleteTask(task)"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    </section>
+  </section>
+</main>

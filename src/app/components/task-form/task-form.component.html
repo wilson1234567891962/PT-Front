@@ -1,1 +1,88 @@
-<p>task-form works!</p>
+<section class="rounded-[2rem] border border-white/10 bg-white p-6 text-slate-950 shadow-2xl">
+  <div class="mb-6">
+    <span class="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
+      {{ isEditMode ? 'Modo edición' : 'Nueva tarea' }}
+    </span>
+
+    <h2 class="mt-2 text-2xl font-black tracking-tight">
+      {{ isEditMode ? 'Editar tarea' : 'Crear tarea' }}
+    </h2>
+
+    <p class="mt-1 text-sm text-slate-500">
+      {{ isEditMode ? 'Actualiza la información registrada.' : 'Registra una nueva tarea.' }}
+    </p>
+  </div>
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <div>
+      <label for="title" class="mb-2 block text-sm font-black text-slate-700">
+        Título <span class="text-red-600">*</span>
+      </label>
+
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Ejemplo: Crear servicio HTTP"
+      />
+
+      @if (titleInvalid) {
+        <p class="mt-2 text-sm font-semibold text-red-600">
+          El título es obligatorio y máximo de 100 caracteres.
+        </p>
+      }
+    </div>
+
+    <div>
+      <label for="description" class="mb-2 block text-sm font-black text-slate-700">
+        Descripción
+      </label>
+
+      <textarea
+        id="description"
+        rows="5"
+        formControlName="description"
+        class="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Agrega una descripción de la tarea"
+      ></textarea>
+    </div>
+
+    <label
+      class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-bold text-slate-700"
+    >
+      <input
+        type="checkbox"
+        formControlName="completed"
+        class="h-5 w-5 rounded border-slate-300 accent-blue-600"
+      />
+      <span>Marcar como completada</span>
+    </label>
+
+    @if (errorMessage) {
+      <div class="rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-700">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <button
+        type="submit"
+        class="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="isSubmitting"
+      >
+        {{ isEditMode ? 'Actualizar tarea' : 'Guardar tarea' }}
+      </button>
+
+      @if (isEditMode) {
+        <button
+          type="button"
+          class="rounded-2xl bg-slate-100 px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-200"
+          (click)="onCancel()"
+        >
+          Cancelar
+        </button>
+      }
+    </div>
+  </form>
+</section>
