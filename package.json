@@ -7,10 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "prepare": "husky",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
-    "verify": "npm run lint && npm run build && npm run test:ci",
-    "lint": "ng lint"
+    "lint": "npx ng lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "npm run lint && npm run format:check && npm run build && npm run test:ci",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.8.3",
     "typescript": "~5.4.2",
     "typescript-eslint": "8.46.4"
   }
