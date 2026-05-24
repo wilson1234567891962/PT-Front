@@ -81,12 +81,13 @@ export class TaskListComponent implements OnInit {
       return;
     }
 
-    const updatedTask: Task = {
-      ...this.taskPendingStatusChange,
-      completed: this.pendingCompletedValue ? 1 : 0,
-    };
+    const taskId = this.taskPendingStatusChange.taskId;
 
-    this.taskService.updateTask(this.taskPendingStatusChange.taskId, updatedTask).subscribe({
+    const request$ = this.pendingCompletedValue
+      ? this.taskService.completeTask(taskId)
+      : this.taskService.pendingTask(taskId);
+
+    request$.subscribe({
       next: () => {
         this.closeStatusModal();
         this.loadTasks();

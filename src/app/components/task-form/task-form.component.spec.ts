@@ -17,7 +17,7 @@ describe('TaskFormComponent', () => {
         taskId: 1,
         title: 'Nueva tarea',
         description: 'Descripción',
-        completed: 0,
+        completed: false,
       })
     );
 
@@ -26,7 +26,7 @@ describe('TaskFormComponent', () => {
         taskId: 1,
         title: 'Tarea actualizada',
         description: 'Descripción actualizada',
-        completed: 1,
+        completed: true,
       })
     );
 

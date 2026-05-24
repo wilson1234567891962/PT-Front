@@ -52,7 +52,7 @@ export class TaskFormComponent implements OnChanges {
       this.taskForm.patchValue({
         title: this.taskToEdit.title,
         description: this.taskToEdit.description ?? '',
-        completed: this.taskToEdit.completed === 1,
+        completed: this.taskToEdit.completed,
       });
     }
   }
@@ -72,23 +72,41 @@ export class TaskFormComponent implements OnChanges {
       taskId: this.taskToEdit?.taskId,
       title: formValue.title.trim(),
       description: formValue.description.trim(),
-      completed: formValue.completed ? 1 : 0,
+      completed: formValue.completed,
     };
 
-    const request$ =
-      this.isEditMode && task.taskId
-        ? this.taskService.updateTask(task.taskId, task)
-        : this.taskService.createTask(task);
+    if (this.isEditMode && task.taskId) {
+      this.taskService.updateTask(task.taskId, task).subscribe({
+        next: () => {
+          this.handleSuccess();
+        },
+        error: (error: Error) => {
+          this.handleError(error);
+        },
+      });
 
-    request$.subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.resetForm();
-        this.formSaved.emit();
+      return;
+    }
+
+    this.taskService.createTask(task).subscribe({
+      next: (createdTask: Task) => {
+        if (task.completed && createdTask.taskId) {
+          this.taskService.completeTask(createdTask.taskId).subscribe({
+            next: () => {
+              this.handleSuccess();
+            },
+            error: (error: Error) => {
+              this.handleError(error);
+            },
+          });
+
+          return;
+        }
+
+        this.handleSuccess();
       },
       error: (error: Error) => {
-        this.isSubmitting = false;
-        this.errorMessage = error.message;
+        this.handleError(error);
       },
     });
   }
@@ -96,6 +114,17 @@ export class TaskFormComponent implements OnChanges {
   onCancel(): void {
     this.resetForm();
     this.editCancelled.emit();
+  }
+
+  private handleSuccess(): void {
+    this.isSubmitting = false;
+    this.resetForm();
+    this.formSaved.emit();
+  }
+
+  private handleError(error: Error): void {
+    this.isSubmitting = false;
+    this.errorMessage = error.message;
   }
 
   private resetForm(): void {

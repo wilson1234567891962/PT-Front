@@ -22,7 +22,7 @@ describe('AppComponent', () => {
         taskId: 1,
         title: 'Nueva tarea',
         description: 'Descripción',
-        completed: 0,
+        completed: false,
       })
     );
     taskServiceSpy.updateTask.and.returnValue(
@@ -30,7 +30,7 @@ describe('AppComponent', () => {
         taskId: 1,
         title: 'Tarea actualizada',
         description: 'Descripción',
-        completed: 1,
+        completed: true,
       })
     );
     taskServiceSpy.deleteTask.and.returnValue(of(undefined));

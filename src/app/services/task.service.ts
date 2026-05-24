@@ -32,6 +32,34 @@ export class TaskService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
+  completeTask(id: number): Observable<Task> {
+    return this.http
+      .post<Task>(`${this.apiUrl}/${id}/complete`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  pendingTask(id: number): Observable<Task> {
+    return this.http
+      .post<Task>(`${this.apiUrl}/${id}/pending`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  getCompletedTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/completed`).pipe(catchError(this.handleError));
+  }
+
+  getPendingTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/pending`).pipe(catchError(this.handleError));
+  }
+
+  searchTasks(title: string): Observable<Task[]> {
+    return this.http
+      .get<Task[]>(`${this.apiUrl}/search`, {
+        params: { title },
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocurrió un error inesperado.';
 
