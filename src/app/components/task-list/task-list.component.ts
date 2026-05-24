@@ -14,7 +14,9 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 })
 export class TaskListComponent implements OnInit {
   private readonly taskService = inject(TaskService);
-
+  taskPendingStatusChange: Task | null = null;
+  pendingCompletedValue = false;
+  isStatusModalOpen = false;
   tasks: Task[] = [];
   selectedTask: Task | null = null;
 
@@ -68,23 +70,38 @@ export class TaskListComponent implements OnInit {
   }
 
   onToggleCompleted(task: Task, checked: boolean): void {
-    if (!task.taskId) {
+    this.taskPendingStatusChange = task;
+    this.pendingCompletedValue = checked;
+    this.isStatusModalOpen = true;
+  }
+
+  confirmStatusChange(): void {
+    if (!this.taskPendingStatusChange?.taskId) {
+      this.closeStatusModal();
       return;
     }
 
     const updatedTask: Task = {
-      ...task,
-      completed: checked ? 1 : 0,
+      ...this.taskPendingStatusChange,
+      completed: this.pendingCompletedValue ? 1 : 0,
     };
 
-    this.taskService.updateTask(task.taskId, updatedTask).subscribe({
+    this.taskService.updateTask(this.taskPendingStatusChange.taskId, updatedTask).subscribe({
       next: () => {
+        this.closeStatusModal();
         this.loadTasks();
       },
       error: (error: Error) => {
         this.errorMessage = error.message;
+        this.closeStatusModal();
       },
     });
+  }
+
+  closeStatusModal(): void {
+    this.isStatusModalOpen = false;
+    this.taskPendingStatusChange = null;
+    this.pendingCompletedValue = false;
   }
 
   onFormSaved(): void {
